@@ -1,3 +1,3 @@
 [submodule "ManiSkill2_real2sim"]
 	path = ManiSkill2_real2sim
-	url = https://github.com/simpler-env/ManiSkill2_real2sim/tree/79e8c959cc6ff05956854c6571c5cba770668b9a
+	url = git@github.com:ethanhharrison/ManiSkill2_real2sim.git
