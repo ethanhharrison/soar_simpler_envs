@@ -1,5 +1,6 @@
 import gymnasium as gym
 import mani_skill2_real2sim.envs
+import warnings
 
 ENVIRONMENTS = [
     "google_robot_pick_coke_can",
@@ -27,6 +28,7 @@ ENVIRONMENTS = [
     "widowx_carrot_on_plate",
     "widowx_stack_cube",
     "widowx_put_eggplant_in_basket",
+    "widowx_put_block_in_bowl",
 ]
 
 ENVIRONMENT_MAP = {
@@ -67,13 +69,22 @@ ENVIRONMENT_MAP = {
     "widowx_carrot_on_plate": ("PutCarrotOnPlateInScene-v0", {}),
     "widowx_stack_cube": ("StackGreenCubeOnYellowCubeBakedTexInScene-v0", {}),
     "widowx_put_eggplant_in_basket": ("PutEggplantInBasketScene-v0", {}),
+    "widowx_put_block_in_bowl": ("PutToyBlockInWoodenBowlScene-v0", {}),
 }
 
 
-def make(task_name):
+def make(task_name, **kwargs):
     """Creates simulated eval environment from task name."""
     assert task_name in ENVIRONMENTS, f"Task {task_name} is not supported. Environments: \n {ENVIRONMENTS}"
-    env_name, kwargs = ENVIRONMENT_MAP[task_name]
-    kwargs["prepackaged_config"] = True
-    env = gym.make(env_name, obs_mode="rgbd", **kwargs)
+    env_name, env_kwargs = ENVIRONMENT_MAP[task_name]
+    
+    env_kwargs["obs_mode"] = "rgbd",
+    env_kwargs["prepackaged_config"] = True
+
+    for key, value in kwargs.items():
+        if key in env_kwargs:
+            warnings.warn(f"default value [{env_kwargs[key]}] for Key {key} changes to value [{value}]")
+        env_kwargs[key] = value
+
+    env = gym.make(env_name, **env_kwargs)
     return env
